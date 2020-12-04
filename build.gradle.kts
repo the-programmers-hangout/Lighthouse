@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "me.ddivad"
+group = "me.moeszyslak"
 version = Versions.BOT
-description = "discordKt starter template"
+description = "A simple discord bot that allows members to alert staff"
 
 plugins {
     kotlin("jvm") version "1.4.10"
@@ -24,10 +24,10 @@ tasks {
     }
 
     shadowJar {
-        archiveFileName.set("Starter.jar")
+        archiveFileName.set("Lighthouse.jar")
         manifest {
             attributes(
-                    "Main-Class" to "me.ddivad.starter.MainKt"
+                    "Main-Class" to "me.moeszyslak.lighthouse.MainKt"
             )
         }
     }
@@ -36,5 +36,5 @@ tasks {
 
 object Versions {
     const val BOT = "1.0.0"
-    const val DISCORDKT = "0.21.0"
+    const val DISCORDKT = "0.21.3"
 }

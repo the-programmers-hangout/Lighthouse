@@ -1,7 +1,7 @@
 version: '3.7'
 services:
-  starter:
-    container_name: Starter
+  lighthouse:
+    container_name: Lighthouse
     build:
       dockerfile: Dockerfile
       context: .
