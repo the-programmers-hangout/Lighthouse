@@ -12,9 +12,7 @@ fun alertListener(configuration: Configuration) = listeners {
         val guild = getGuild() ?: return@on
         val guildConfiguration = configuration[guild.id.longValue] ?: return@on
 
-        if (message.content.startsWith(guildConfiguration.alertString) ||
-                message.mentionedRoleIds.contains(guildConfiguration.alertRole.toSnowflake())) {
-
+        if (message.mentionedRoleIds.contains(guildConfiguration.alertRole.toSnowflake())) {
             val alertChannel = guild.getChannelOf<TextChannel>(guildConfiguration.alertChannel.toSnowflake())
             val author = message.author ?: return@on
 
@@ -22,6 +20,5 @@ fun alertListener(configuration: Configuration) = listeners {
                     "just created a emergency alert in ${message.channel.mention} :: " +
                     " https://discord.com/channels/${guild.id.value}/${message.channel.id.value}/${message.id.value}")
         }
-
     }
 }

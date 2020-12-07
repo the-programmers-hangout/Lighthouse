@@ -65,21 +65,6 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
         }
     }
 
-    guildCommand("AlertString") {
-        description = "Set the bot alert string."
-        execute(ChannelArg) {
-            if (!configuration.hasGuildConfig(guild.id.longValue)) {
-                respond("Please run the **setup** command to set this initially.")
-                return@execute
-            }
-
-            val channel = args.first
-            configuration[guild.id.longValue]?.alertChannel = channel.id.longValue
-            configuration.save()
-            respond("Alert channel set to: **${channel.mention}**")
-        }
-    }
-
     guildCommand("AlertRole") {
         description = "Set the bot alert role."
         execute(ChannelArg) {

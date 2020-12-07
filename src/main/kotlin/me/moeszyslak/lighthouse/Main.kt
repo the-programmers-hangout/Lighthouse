@@ -3,13 +3,12 @@ package me.moeszyslak.lighthouse
 import com.gitlab.kordlib.common.entity.Snowflake
 import com.gitlab.kordlib.core.any
 import com.gitlab.kordlib.core.entity.Member
-import com.gitlab.kordlib.gateway.Intents
-import com.gitlab.kordlib.gateway.PrivilegedIntent
+import com.gitlab.kordlib.gateway.*
 import me.jakejmattson.discordkt.api.dsl.bot
+import me.jakejmattson.discordkt.api.extensions.addInlineField
 import me.moeszyslak.lighthouse.dataclasses.Configuration
 import me.moeszyslak.lighthouse.services.BotStatsService
 import java.awt.Color
-import java.io.ObjectInputFilter
 
 @PrivilegedIntent
 suspend fun main() {
@@ -21,7 +20,6 @@ suspend fun main() {
     bot(token) {
         prefix {
             val configuration = discord.getInjectionObjects(Configuration::class)
-
             guild?.let { configuration[it.id.longValue]?.prefix } ?: prefix
         }
 
@@ -44,17 +42,8 @@ suspend fun main() {
                 url = it.discord.api.getSelf().avatar.url
             }
 
-            field {
-                name = "Prefix"
-                value = it.prefix()
-                inline = true
-            }
-
-            field {
-                name = "Ping"
-                value = statsService.ping
-                inline = true
-            }
+            addInlineField("Prefix", it.prefix())
+            addInlineField("Ping", statsService.ping)
 
             if (guildConfiguration != null) {
                 val adminRole = it.guild!!.getRole(Snowflake(guildConfiguration.adminRoleId))
@@ -64,11 +53,10 @@ suspend fun main() {
                 field {
                     name = "Configuration"
                     value = "```" +
-                            "Admin Role: ${adminRole.mention}\n" +
-                            "Alert Channel: ${alertChannel.mention}\n" +
-                            "Alert String: ${guildConfiguration.alertString}\n" +
-                            "Alert Role: ${alertRole.mention}" +
-                            "```"
+                        "Admin Role: ${adminRole.mention}\n" +
+                        "Alert Channel: ${alertChannel.mention}\n" +
+                        "Alert Role: ${alertRole.mention}" +
+                        "```"
                 }
             }
 
@@ -78,18 +66,14 @@ suspend fun main() {
 
                 name = "Bot Info"
                 value = "```" +
-                        "Version: 1.0.0\n" +
-                        "DiscordKt: ${versions.library}\n" +
-                        "Kord: ${versions.kord}\n" +
-                        "Kotlin: ${versions.kotlin}" +
-                        "```"
+                    "Version: 1.0.0\n" +
+                    "DiscordKt: ${versions.library}\n" +
+                    "Kord: ${versions.kord}\n" +
+                    "Kotlin: ${versions.kotlin}" +
+                    "```"
             }
 
-            field {
-                name = "Uptime"
-                value = statsService.uptime
-                inline = true
-            }
+            addInlineField("Uptime", statsService.uptime)
 
             field {
                 name = "Source"
@@ -105,8 +89,7 @@ suspend fun main() {
             if (guild != null) {
                 val member = guild!!.getMember(user.id)
                 member.hasPermission()
-            }
-            else
+            } else
                 false
         }
 

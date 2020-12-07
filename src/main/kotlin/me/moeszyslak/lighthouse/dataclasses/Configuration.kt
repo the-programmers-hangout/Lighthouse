@@ -13,14 +13,13 @@ data class Configuration(
     operator fun get(id: Long) = guildConfigurations[id]
     fun hasGuildConfig(guildId: Long) = guildConfigurations.containsKey(guildId)
 
-    fun setup(guild: Guild, prefix: String, adminRole: Role, alertChannel: Channel, alertString: String, alertRole: Role) {
+    fun setup(guild: Guild, prefix: String, adminRole: Role, alertChannel: Channel, alertRole: Role) {
         if (guildConfigurations[guild.id.longValue] != null) return
 
         guildConfigurations[guild.id.longValue] = GuildConfiguration(
             prefix,
             adminRole.id.longValue,
             alertChannel.id.longValue,
-            alertString,
             alertRole.id.longValue
         )
 
@@ -32,6 +31,5 @@ data class GuildConfiguration(
     var prefix: String = "++",
     var adminRoleId: Long,
     var alertChannel: Long,
-    var alertString: String,
     var alertRole: Long
 )

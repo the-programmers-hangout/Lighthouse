@@ -14,8 +14,6 @@ fun emergencyConversation() = conversation {
             name = "Uses"
             value = """
                 * NSFW/gore content
-                * Slurs
-                * Raids
             """.trimIndent()
         }
 
