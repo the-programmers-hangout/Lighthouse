@@ -6,13 +6,10 @@ import me.jakejmattson.discordkt.api.arguments.RoleArg
 import me.jakejmattson.discordkt.api.dsl.commands
 import me.moeszyslak.lighthouse.conversations.ConfigurationConversation
 import me.moeszyslak.lighthouse.dataclasses.Configuration
-import me.moeszyslak.lighthouse.services.PermissionLevel
-import me.moeszyslak.lighthouse.services.requiredPermissionLevel
 
 fun guildConfigCommands(configuration: Configuration) = commands("Configuration") {
     guildCommand("Setup") {
         description = "Configure a guild to use this bot."
-        requiredPermissionLevel = PermissionLevel.Administrator
         execute {
             if (configuration.hasGuildConfig(guild.id.longValue)) {
                 respond("Guild configuration exists. To modify it use the commands to set values.")
@@ -27,7 +24,6 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
 
     guildCommand("Prefix") {
         description = "Set the bot prefix."
-        requiredPermissionLevel = PermissionLevel.Administrator
         execute(EveryArg) {
             if (!configuration.hasGuildConfig(guild.id.longValue)) {
                 respond("Please run the **setup** command to set this initially.")
@@ -40,24 +36,8 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
         }
     }
 
-    guildCommand("StaffRole") {
-        description = "Set the bot staff role."
-        requiredPermissionLevel = PermissionLevel.Administrator
-        execute(RoleArg) {
-            if (!configuration.hasGuildConfig(guild.id.longValue)) {
-                respond("Please run the **setup** command to set this initially.")
-                return@execute
-            }
-            val role = args.first
-            configuration[guild.id.longValue]?.staffRoleId = role.id.longValue
-            configuration.save()
-            respond("Role set to: **${role.name}**")
-        }
-    }
-
     guildCommand("AdminRole") {
         description = "Set the bot admin role."
-        requiredPermissionLevel = PermissionLevel.Administrator
         execute(RoleArg) {
             if (!configuration.hasGuildConfig(guild.id.longValue)) {
                 respond("Please run the **setup** command to set this initially.")
@@ -72,7 +52,6 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
 
     guildCommand("AlertChannel") {
         description = "Set the bot alert channel."
-        requiredPermissionLevel = PermissionLevel.Administrator
         execute(ChannelArg) {
             if (!configuration.hasGuildConfig(guild.id.longValue)) {
                 respond("Please run the **setup** command to set this initially.")
@@ -88,7 +67,6 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
 
     guildCommand("AlertString") {
         description = "Set the bot alert string."
-        requiredPermissionLevel = PermissionLevel.Administrator
         execute(ChannelArg) {
             if (!configuration.hasGuildConfig(guild.id.longValue)) {
                 respond("Please run the **setup** command to set this initially.")
@@ -104,7 +82,6 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
 
     guildCommand("AlertRole") {
         description = "Set the bot alert role."
-        requiredPermissionLevel = PermissionLevel.Administrator
         execute(ChannelArg) {
             if (!configuration.hasGuildConfig(guild.id.longValue)) {
                 respond("Please run the **setup** command to set this initially.")

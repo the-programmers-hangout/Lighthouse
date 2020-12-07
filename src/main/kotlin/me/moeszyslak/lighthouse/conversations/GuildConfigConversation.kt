@@ -12,11 +12,10 @@ class ConfigurationConversation(private val configuration: Configuration) {
     fun createConfigurationConversation(guild: Guild) = conversation {
         val prefix = promptMessage(EveryArg, "Bot prefix:")
         val adminRole = promptMessage(RoleArg, "Admin role:")
-        val staffRole = promptMessage(RoleArg, "Staff role:")
         val alertChannel = promptMessage(ChannelArg, "Alert Channel:")
         val alertString = promptMessage(AnyArg, "Alert String:")
         val alertRole = promptMessage(RoleArg, "Alert Role:")
 
-        configuration.setup(guild, prefix, adminRole, staffRole, alertChannel, alertString, alertRole)
+        configuration.setup(guild, prefix, adminRole, alertChannel, alertString, alertRole)
     }
 }

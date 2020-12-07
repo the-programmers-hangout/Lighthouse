@@ -1,15 +1,15 @@
 package me.moeszyslak.lighthouse
 
 import com.gitlab.kordlib.common.entity.Snowflake
-import com.gitlab.kordlib.gateway.Intent
+import com.gitlab.kordlib.core.any
+import com.gitlab.kordlib.core.entity.Member
 import com.gitlab.kordlib.gateway.Intents
 import com.gitlab.kordlib.gateway.PrivilegedIntent
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.moeszyslak.lighthouse.dataclasses.Configuration
 import me.moeszyslak.lighthouse.services.BotStatsService
-import me.moeszyslak.lighthouse.services.PermissionsService
-import me.moeszyslak.lighthouse.services.requiredPermissionLevel
 import java.awt.Color
+import java.io.ObjectInputFilter
 
 @PrivilegedIntent
 suspend fun main() {
@@ -38,7 +38,6 @@ suspend fun main() {
 
             title = "Lighthouse"
             description = "A simple discord bot that allows members to alert staff"
-
             color = it.discord.configuration.theme
 
             thumbnail {
@@ -59,20 +58,16 @@ suspend fun main() {
 
             if (guildConfiguration != null) {
                 val adminRole = it.guild!!.getRole(Snowflake(guildConfiguration.adminRoleId))
-                val staffRole = it.guild!!.getRole(Snowflake(guildConfiguration.staffRoleId))
                 val alertRole = it.guild!!.getRole(Snowflake(guildConfiguration.alertRole))
-
                 val alertChannel = it.guild!!.getChannel(Snowflake(guildConfiguration.alertChannel))
 
                 field {
-
                     name = "Configuration"
                     value = "```" +
-                            "Admin Role: ${adminRole.name}\n" +
-                            "Staff Role: ${staffRole.name}\n" +
-                            "Alert Channel: ${alertChannel.name}\n" +
+                            "Admin Role: ${adminRole.mention}\n" +
+                            "Alert Channel: ${alertChannel.mention}\n" +
                             "Alert String: ${guildConfiguration.alertString}\n" +
-                            "Alert Role: ${alertRole.name}" +
+                            "Alert Role: ${alertRole.mention}" +
                             "```"
                 }
             }
@@ -104,20 +99,21 @@ suspend fun main() {
         }
 
         permissions {
-            val permissionsService = discord.getInjectionObjects(PermissionsService::class)
-            val permission = command.requiredPermissionLevel
-            if (guild != null)
-                permissionsService.hasClearance(guild!!, user, permission)
+            val configuration = discord.getInjectionObjects(Configuration::class)
+            suspend fun Member.hasPermission() = roles.any { it.id.longValue == configuration[guild.id.longValue]?.adminRoleId } || isOwner()
+
+            if (guild != null) {
+                val member = guild!!.getMember(user.id)
+                member.hasPermission()
+            }
             else
                 false
         }
 
         intents {
-            Intents.nonPrivileged.intents.forEach {
+            Intents.all.intents.forEach {
                 +it
             }
-
-            +Intent.GuildMembers
         }
     }
 }
