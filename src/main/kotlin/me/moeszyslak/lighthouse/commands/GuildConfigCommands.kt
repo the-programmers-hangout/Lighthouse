@@ -1,10 +1,8 @@
 package me.moeszyslak.lighthouse.commands
 
-import me.jakejmattson.discordkt.api.arguments.ChannelArg
-import me.jakejmattson.discordkt.api.arguments.EveryArg
-import me.jakejmattson.discordkt.api.arguments.RoleArg
+import me.jakejmattson.discordkt.api.arguments.*
 import me.jakejmattson.discordkt.api.dsl.commands
-import me.moeszyslak.lighthouse.conversations.ConfigurationConversation
+import me.moeszyslak.lighthouse.conversations.*
 import me.moeszyslak.lighthouse.dataclasses.Configuration
 
 fun guildConfigCommands(configuration: Configuration) = commands("Configuration") {
@@ -15,9 +13,8 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
                 respond("Guild configuration exists. To modify it use the commands to set values.")
                 return@execute
             }
-            ConfigurationConversation(configuration)
-                    .createConfigurationConversation(guild)
-                    .startPublicly(discord, author, channel)
+
+            createConfigurationConversation(configuration, guild).startPublicly(discord, author, channel)
             respond("${guild.name} setup")
         }
     }
