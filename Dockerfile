@@ -1,4 +1,4 @@
-FROM gradle:6.7.0-jdk15 AS build
+FROM gradle:7.1.1-jdk15 AS build
 COPY --chown=gradle:gradle . /lighthouse
 WORKDIR /lighthouse
 RUN gradle shadowJar --no-daemon
