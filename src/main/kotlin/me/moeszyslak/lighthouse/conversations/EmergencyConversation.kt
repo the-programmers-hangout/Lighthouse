@@ -45,11 +45,9 @@ fun createEmergencyConversation(guildConfiguration: GuildConfiguration, invoke: 
         val guild = invoke.getGuild()
         val alertChannel = guild.getChannelOf<GuildMessageChannel>(guildConfiguration.alertChannel.toSnowflake())
         alertChannel.createMessage(
-            "ping here :: ${user.mention} " +
+            "@here :: ${user.mention} " +
                     "just created a emergency alert in ${invoke.channel.mention} :: " +
                     " https://discord.com/channels/${guild.id.value}/${invoke.channel.id.value}/${invoke.id.value}"
         )
-    } else {
-
     }
 }
