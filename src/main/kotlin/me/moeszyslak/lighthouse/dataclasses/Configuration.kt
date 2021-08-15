@@ -1,7 +1,8 @@
 package me.moeszyslak.lighthouse.dataclasses
 
-import com.gitlab.kordlib.core.entity.*
-import com.gitlab.kordlib.core.entity.channel.Channel
+import dev.kord.core.entity.Guild
+import dev.kord.core.entity.Role
+import dev.kord.core.entity.channel.Channel
 import me.jakejmattson.discordkt.api.dsl.Data
 
 data class Configuration(
@@ -14,13 +15,13 @@ data class Configuration(
     fun hasGuildConfig(guildId: Long) = guildConfigurations.containsKey(guildId)
 
     fun setup(guild: Guild, prefix: String, adminRole: Role, alertChannel: Channel, alertRole: Role) {
-        if (guildConfigurations[guild.id.longValue] != null) return
+        if (guildConfigurations[guild.id.value] != null) return
 
-        guildConfigurations[guild.id.longValue] = GuildConfiguration(
+        guildConfigurations[guild.id.value] = GuildConfiguration(
             prefix,
-            adminRole.id.longValue,
-            alertChannel.id.longValue,
-            alertRole.id.longValue
+            adminRole.id.value,
+            alertChannel.id.value,
+            alertRole.id.value
         )
 
         save()

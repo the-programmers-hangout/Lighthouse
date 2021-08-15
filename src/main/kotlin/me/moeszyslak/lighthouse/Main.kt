@@ -1,16 +1,17 @@
 package me.moeszyslak.lighthouse
 
-import com.gitlab.kordlib.common.entity.Snowflake
-import com.gitlab.kordlib.core.any
-import com.gitlab.kordlib.core.entity.Member
-import com.gitlab.kordlib.gateway.*
+import dev.kord.common.annotation.KordPreview
+import dev.kord.common.entity.Snowflake
+import dev.kord.common.kColor
+import dev.kord.core.supplier.EntitySupplyStrategy
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.extensions.addInlineField
 import me.moeszyslak.lighthouse.dataclasses.Configuration
+import me.moeszyslak.lighthouse.dataclasses.Permissions
 import me.moeszyslak.lighthouse.services.BotStatsService
 import java.awt.Color
 
-@PrivilegedIntent
+@KordPreview
 suspend fun main() {
     val token = System.getenv("BOT_TOKEN") ?: null
     val prefix = System.getenv("DEFAULT_PREFIX") ?: "<none>"
@@ -20,26 +21,29 @@ suspend fun main() {
     bot(token) {
         prefix {
             val configuration = discord.getInjectionObjects(Configuration::class)
-            guild?.let { configuration[it.id.longValue]?.prefix } ?: prefix
+            guild?.let { configuration[it.id.value]?.prefix } ?: prefix
         }
 
         configure {
             allowMentionPrefix = true
             commandReaction = null
             theme = Color.MAGENTA
+            generateCommandDocs = true
+            entitySupplyStrategy = EntitySupplyStrategy.cacheWithRestFallback
+            permissions(Permissions.STAFF)
         }
 
         mentionEmbed {
             val configuration = it.discord.getInjectionObjects(Configuration::class)
             val statsService = it.discord.getInjectionObjects(BotStatsService::class)
-            val guildConfiguration = configuration[it.guild!!.id.longValue]
+            val guildConfiguration = configuration[it.guild!!.id.value]
 
             title = "Lighthouse"
             description = "A simple discord bot that allows members to alert staff"
-            color = it.discord.configuration.theme
+            color = it.discord.configuration.theme!!.kColor
 
             thumbnail {
-                url = it.discord.api.getSelf().avatar.url
+                url = it.discord.kord.getSelf().avatar.url
             }
 
             addInlineField("Prefix", it.prefix())
@@ -66,8 +70,8 @@ suspend fun main() {
 
                 name = "Bot Info"
                 value = "```" +
-                    "Version: 1.0.0\n" +
-                    "DiscordKt: ${versions.library}\n" +
+                        "Version: 2.0.0\n" +
+                        "DiscordKt: ${versions.library}\n" +
                     "Kord: ${versions.kord}\n" +
                     "Kotlin: ${versions.kotlin}" +
                     "```"
@@ -82,21 +86,5 @@ suspend fun main() {
             }
         }
 
-        permissions {
-            val configuration = discord.getInjectionObjects(Configuration::class)
-            suspend fun Member.hasPermission() = roles.any { it.id.longValue == configuration[guild.id.longValue]?.adminRoleId } || isOwner()
-
-            if (guild != null) {
-                val member = guild!!.getMember(user.id)
-                member.hasPermission()
-            } else
-                false
-        }
-
-        intents {
-            Intents.all.intents.forEach {
-                +it
-            }
-        }
     }
 }

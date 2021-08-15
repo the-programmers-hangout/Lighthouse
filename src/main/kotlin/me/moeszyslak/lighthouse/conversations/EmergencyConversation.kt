@@ -1,41 +1,55 @@
 package me.moeszyslak.lighthouse.conversations
 
-import com.gitlab.kordlib.core.behavior.getChannelOf
-import com.gitlab.kordlib.core.entity.channel.TextChannel
-import com.gitlab.kordlib.kordx.emoji.*
-import me.jakejmattson.discordkt.api.dsl.conversation
+import dev.kord.common.kColor
+import dev.kord.core.behavior.getChannelOf
+import dev.kord.core.entity.Message
+import dev.kord.core.entity.channel.GuildMessageChannel
+import dev.kord.x.emoji.Emojis
+import me.jakejmattson.discordkt.api.conversations.conversation
 import me.jakejmattson.discordkt.api.extensions.toSnowflake
 import me.moeszyslak.lighthouse.dataclasses.GuildConfiguration
 import java.awt.Color
 
-fun createEmergencyConversation(guildConfiguration: GuildConfiguration) = conversation {
-    val shouldExecute = promptReaction(mapOf(Emojis.whiteCheckMark.toReaction() to true, Emojis.x.toReaction() to false)) {
-        color = Color.red
-        title = "Confirm Emergency Ping"
-        description = "This will ping all online staff members. Make sure this is what you want."
+fun createEmergencyConversation(guildConfiguration: GuildConfiguration, invoke: Message) = conversation {
+    val shouldExecute = promptButton<Boolean> {
+        embed {
+            color = Color.red.kColor
+            title = "Confirm Emergency Ping"
+            description = "This will ping all online staff members. Make sure this is what you want."
 
-        field {
-            name = "Uses"
-            value = """
+            field {
+                name = "Uses"
+                value = """
                 * NSFW/gore content
             """.trimIndent()
-        }
+            }
 
-        field {
-            value = """
+            field {
+                value = """
                 ${Emojis.whiteCheckMark.unicode} - Yes. Ping them all.
                 ${Emojis.x.unicode} - No, my mistake.
             """.trimIndent()
+            }
         }
+
+        buttons {
+            button("Yes", Emojis.whiteCheckMark, true)
+            button("No", Emojis.x, false)
+        }
+
     }
 
-    if (shouldExecute) {
-        val message = channel.getMessageOrNull(previousUserMessageId)!!
-        val guild = message.getGuild()
-        val alertChannel = guild.getChannelOf<TextChannel>(guildConfiguration.alertChannel.toSnowflake())
+    channel.getMessage(previousBotMessageId).delete()
 
-        alertChannel.createMessage("@here :: ${user.mention} " +
-            "just created a emergency alert in ${message.channel.mention} :: " +
-            " https://discord.com/channels/${guild.id.value}/${message.channel.id.value}/${message.id.value}")
+    if (shouldExecute) {
+        val guild = invoke.getGuild()
+        val alertChannel = guild.getChannelOf<GuildMessageChannel>(guildConfiguration.alertChannel.toSnowflake())
+        alertChannel.createMessage(
+            "ping here :: ${user.mention} " +
+                    "just created a emergency alert in ${invoke.channel.mention} :: " +
+                    " https://discord.com/channels/${guild.id.value}/${invoke.channel.id.value}/${invoke.id.value}"
+        )
+    } else {
+
     }
 }
