@@ -4,6 +4,8 @@ import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.common.kColor
 import dev.kord.core.supplier.EntitySupplyStrategy
+import dev.kord.gateway.Intents
+import dev.kord.gateway.PrivilegedIntent
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.extensions.addInlineField
 import me.moeszyslak.lighthouse.dataclasses.Configuration
@@ -11,6 +13,7 @@ import me.moeszyslak.lighthouse.dataclasses.Permissions
 import me.moeszyslak.lighthouse.services.BotStatsService
 import java.awt.Color
 
+@PrivilegedIntent
 @KordPreview
 suspend fun main() {
     val token = System.getenv("BOT_TOKEN") ?: null
@@ -30,6 +33,7 @@ suspend fun main() {
             theme = Color.MAGENTA
             generateCommandDocs = true
             entitySupplyStrategy = EntitySupplyStrategy.cacheWithRestFallback
+            intents = Intents.all
             permissions(Permissions.STAFF)
         }
 
@@ -57,10 +61,10 @@ suspend fun main() {
                 field {
                     name = "Configuration"
                     value = "```" +
-                        "Admin Role: ${adminRole.mention}\n" +
-                        "Alert Channel: ${alertChannel.mention}\n" +
-                        "Alert Role: ${alertRole.mention}" +
-                        "```"
+                            "Admin Role: ${adminRole.mention}\n" +
+                            "Alert Channel: ${alertChannel.mention}\n" +
+                            "Alert Role: ${alertRole.mention}" +
+                            "```"
                 }
             }
 
@@ -72,9 +76,9 @@ suspend fun main() {
                 value = "```" +
                         "Version: 2.0.1\n" +
                         "DiscordKt: ${versions.library}\n" +
-                    "Kord: ${versions.kord}\n" +
-                    "Kotlin: ${versions.kotlin}" +
-                    "```"
+                        "Kord: ${versions.kord}\n" +
+                        "Kotlin: ${versions.kotlin}" +
+                        "```"
             }
 
             addInlineField("Uptime", statsService.uptime)

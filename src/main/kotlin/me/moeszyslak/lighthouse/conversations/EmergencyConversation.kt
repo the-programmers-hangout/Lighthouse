@@ -15,12 +15,14 @@ fun createEmergencyConversation(guildConfiguration: GuildConfiguration, invoke: 
         embed {
             color = Color.red.kColor
             title = "Confirm Emergency Ping"
-            description = "This will ping all online staff members. Make sure this is what you want."
+            description =
+                "This will ping all online staff members. Make sure this is what you want as invalid pings may result in infractions."
 
             field {
                 name = "Uses"
                 value = """
                 * NSFW/gore content
+                * Unnoticed raids
             """.trimIndent()
             }
 
