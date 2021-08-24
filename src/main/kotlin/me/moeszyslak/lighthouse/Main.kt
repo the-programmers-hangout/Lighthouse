@@ -61,9 +61,9 @@ suspend fun main() {
                 field {
                     name = "Configuration"
                     value = "```" +
-                            "Admin Role: ${adminRole.mention}\n" +
-                            "Alert Channel: ${alertChannel.mention}\n" +
-                            "Alert Role: ${alertRole.mention}" +
+                            "Admin Role: ${adminRole.name}\n" +
+                            "Alert Channel: ${alertChannel.name}\n" +
+                            "Alert Role: ${alertRole.name}" +
                             "```"
                 }
             }

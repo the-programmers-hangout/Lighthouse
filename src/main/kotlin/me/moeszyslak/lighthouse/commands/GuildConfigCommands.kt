@@ -66,7 +66,7 @@ fun guildConfigCommands(configuration: Configuration) = commands("Configuration"
 
     guildCommand("AlertRole") {
         description = "Set the bot alert role."
-        execute(ChannelArg) {
+        execute(RoleArg) {
             if (!configuration.hasGuildConfig(guild.id.value)) {
                 respond("Please run the **setup** command to set this initially.")
                 return@execute
