@@ -3,13 +3,13 @@ version = Versions.BOT
 description = "A simple discord bot that allows members to alert staff"
 
 plugins {
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
     mavenCentral()
-    maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
@@ -32,6 +32,6 @@ tasks {
 }
 
 object Versions {
-    const val BOT = "1.0.0"
-    const val DISCORDKT = "0.23.0-SNAPSHOT"
+    const val BOT = "3.0.0"
+    const val DISCORDKT = "0.23.2"
 }

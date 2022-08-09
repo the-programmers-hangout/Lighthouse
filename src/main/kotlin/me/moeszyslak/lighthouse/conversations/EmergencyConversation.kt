@@ -5,13 +5,13 @@ import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.Message
 import dev.kord.core.entity.channel.GuildMessageChannel
 import dev.kord.x.emoji.Emojis
-import me.jakejmattson.discordkt.api.conversations.conversation
-import me.jakejmattson.discordkt.api.extensions.toSnowflake
+import me.jakejmattson.discordkt.conversations.conversation
+import me.jakejmattson.discordkt.extensions.toSnowflake
 import me.moeszyslak.lighthouse.dataclasses.GuildConfiguration
 import java.awt.Color
 
 fun createEmergencyConversation(guildConfiguration: GuildConfiguration, invoke: Message) = conversation {
-    val shouldExecute = promptButton<Boolean> {
+    val shouldExecute = promptButton {
         embed {
             color = Color.red.kColor
             title = "Confirm Emergency Ping"
@@ -38,14 +38,13 @@ fun createEmergencyConversation(guildConfiguration: GuildConfiguration, invoke: 
             button("Yes", Emojis.whiteCheckMark, true)
             button("No", Emojis.x, false)
         }
-
     }
 
     channel.getMessage(previousBotMessageId).delete()
 
     if (shouldExecute) {
         val guild = invoke.getGuild()
-        val alertChannel = guild.getChannelOf<GuildMessageChannel>(guildConfiguration.alertChannel.toSnowflake())
+        val alertChannel = guild.getChannelOf<GuildMessageChannel>(guildConfiguration.alertChannel)
         alertChannel.createMessage(
             "@here :: ${user.mention} " +
                     "just created a emergency alert in ${invoke.channel.mention} :: " +
