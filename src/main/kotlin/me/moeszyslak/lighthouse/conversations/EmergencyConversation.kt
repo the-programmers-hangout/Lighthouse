@@ -6,7 +6,7 @@ import dev.kord.core.entity.Message
 import dev.kord.core.entity.channel.GuildMessageChannel
 import dev.kord.x.emoji.Emojis
 import me.jakejmattson.discordkt.conversations.conversation
-import me.jakejmattson.discordkt.extensions.toSnowflake
+import me.jakejmattson.discordkt.extensions.jumpLink
 import me.moeszyslak.lighthouse.dataclasses.GuildConfiguration
 import java.awt.Color
 
@@ -43,12 +43,7 @@ fun createEmergencyConversation(guildConfiguration: GuildConfiguration, invoke: 
     channel.getMessage(previousBotMessageId).delete()
 
     if (shouldExecute) {
-        val guild = invoke.getGuild()
-        val alertChannel = guild.getChannelOf<GuildMessageChannel>(guildConfiguration.alertChannel)
-        alertChannel.createMessage(
-            "@here :: ${user.mention} " +
-                    "just created a emergency alert in ${invoke.channel.mention} :: " +
-                    " https://discord.com/channels/${guild.id.value}/${invoke.channel.id.value}/${invoke.id.value}"
-        )
+        invoke.getGuild().getChannelOf<GuildMessageChannel>(guildConfiguration.alertChannel)
+            .createMessage("@here :: ${user.mention} just created a emergency alert in ${invoke.channel.mention} :: ${invoke.jumpLink()}")
     }
 }
