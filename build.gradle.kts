@@ -1,7 +1,7 @@
 import java.util.*
 
 group = "me.moeszyslak"
-version = "3.0.0"
+version = "3.0.1"
 description = "A discord bot for members to alert staff"
 
 plugins {
