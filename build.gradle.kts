@@ -1,5 +1,5 @@
 group = "me.moeszyslak"
-version = "3.0.1"
+version = "3.0.2"
 description = "A discord bot for members to alert staff"
 
 plugins {
