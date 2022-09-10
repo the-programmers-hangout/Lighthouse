@@ -27,7 +27,6 @@ fun main() {
             mentionAsPrefix = true
             commandReaction = null
             theme = Color.MAGENTA
-            entitySupplyStrategy = EntitySupplyStrategy.cacheWithRestFallback
             intents = Intents(Intent.MessageContent)
             defaultPermissions = Permissions(Permission.ManageMessages)
         }
