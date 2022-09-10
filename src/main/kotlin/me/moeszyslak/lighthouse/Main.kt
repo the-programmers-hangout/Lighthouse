@@ -19,13 +19,14 @@ fun main() {
     val token = System.getenv("BOT_TOKEN") ?: null
 
     bot(token) {
-        val configuration = data("config/config.json") { Configuration() }
+        data("config/config.json") { Configuration() }
 
         prefix { "/" }
 
         configure {
             mentionAsPrefix = true
             commandReaction = null
+            recommendCommands = false
             theme = Color.MAGENTA
             intents = Intents(Intent.MessageContent)
             defaultPermissions = Permissions(Permission.ManageMessages)
